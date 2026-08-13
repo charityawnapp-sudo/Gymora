@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>My Fitness Dashboard</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #f4f6f8;
+      color: #222;
+      padding: 30px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    header {
+      margin-bottom: 30px;
+    }
+
+    header h1 {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      color: #777;
+    }
+
+    .top-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 18px;
+      padding: 25px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .card-title {
+      color: #777;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .time {
+      font-size: 38px;
+      font-weight: bold;
+    }
+
+    .date {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .workout-name {
+      font-size: 25px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .workout-details {
+      color: #666;
+      line-height: 1.8;
+    }
+
+    .section-title {
+      margin: 35px 0 15px;
+      font-size: 22px;
+    }
+
+    .prayer-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 15px;
+    }
+
+    .prayer {
+      background: white;
+      padding: 20px;
+      text-align: center;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .prayer h3 {
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .prayer-time {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .schedule {
+      background: white;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .schedule-row {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      padding: 18px 22px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .schedule-row:last-child {
+      border-bottom: none;
+    }
+
+    .schedule-row.today {
+      background: #eef6ff;
+      font-weight: bold;
+    }
+
+    .day {
+      font-weight: bold;
+    }
+
+    .exercise {
+      color: #555;
+    }
+
+    .today .exercise {
+      color: #222;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #222;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      margin-left: 8px;
+    }
+
+    .prayer-note {
+      margin-top: 15px;
+      color: #777;
+      font-size: 13px;
+    }
+
+    @media (max-width: 850px) {
+      .top-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .prayer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 500px) {
+      body {
+        padding: 15px;
+      }
+
+      .prayer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .schedule-row {
+        grid-template-columns: 100px 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <header>
+      <h1>Fitness Dashboard</h1>
+      <p>Bahrain • Workout • Prayer • Daily Tracker</p>
+    </header>
+
+
+    <!-- TOP CARDS -->
+
+    <div class="top-grid">
+
+      <div class="card">
+        <div class="card-title">CURRENT TIME</div>
+
+        <div class="time" id="time">
+          --:--:--
+        </div>
+      </div>
+
+
+      <div class="card">
+        <div class="card-title">TODAY</div>
+
+        <div class="date" id="date">
+          Loading...
+        </div>
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-title">
+          TODAY'S WORKOUT
+        </div>
+
+        <div class="workout-name" id="todayWorkout">
+          Loading...
+        </div>
+
+        <div class="workout-details" id="workoutDetails"></div>
+
+      </div>
+
+    </div>
+
+
+    <!-- PRAYER TIMES -->
+
+    <h2 class="section-title">
+      🕌 Prayer Times
+    </h2>
+
+    <div class="prayer-grid">
+
+      <div class="prayer">
+        <h3>Fajr</h3>
+        <div class="prayer-time" id="fajr">--:--</div>
+      </div>
+
+
+      <div class="prayer">
+        <h3>Sunrise</h3>
+        <div class="prayer-time" id="sunrise">--:--</div>
+      </div>
+
+
+      <div class="prayer">
+        <h3>Dhuhr</h3>
+        <div class="prayer-time" id="dhuhr">--:--</div>
+      </div>
+
+
+      <div class="prayer">
+        <h3>Maghrib</h3>
+        <div class="prayer-time" id="maghrib">--:--</div>
+      </div>
+
+
+      <div class="prayer">
+        <h3>Isha</h3>
+        <div class="prayer-time" id="isha">--:--</div>
+      </div>
+
+    </div>
+
+    <p class="prayer-note">
+      Prayer times: Manama, Bahrain • Shia Ithna-Ashari / Jafari calculation.
+    </p>
+
+
+    <!-- WORKOUT SCHEDULE -->
+
+    <h2 class="section-title">
+      🏋️ Weekly Workout Schedule
+    </h2>
+
+
+    <div class="schedule" id="schedule">
+
+      <div class="schedule-row" data-day="Saturday">
+        <div class="day">Saturday</div>
+
+        <div class="exercise">
+          Chest: 3 exercises × 3 sets
+          <br>
+          Triceps: 2 exercises × 3 sets
+        </div>
+      </div>
+
+
+      <div class="schedule-row" data-day="Sunday">
+        <div class="day">Sunday</div>
+
+        <div class="exercise">
+          Back: 3 exercises × 3 sets
+          <br>
+          Biceps: 2 exercises × 3 sets
+        </div>
+      </div>
+
+
+      <div class="schedule-row" data-day="Monday">
+        <div class="day">Monday</div>
+
+        <div class="exercise">
+          Legs: 4 exercises × 3 sets
+          <br>
+          Calves: 1 exercise × 3 sets
+          <br>
+          Abs: 2 exercises
+        </div>
+      </div>
+
+
+      <div class="schedule-row" data-day="Tuesday">
+        <div class="day">Tuesday</div>
+
+        <div class="exercise">
+          Cardio / Rest
+          <br>
+          30–45 min walking
+        </div>
+      </div>
+
+
+      <div class="schedule-row" data-day="Wednesday">
+        <div class="day">Wednesday</div>
+
+        <div class="exercise">
+          Chest: 2 exercises × 3 sets
+          <br>
+          Back: 2 exercises × 3 sets
+          <br>
+          Shoulders: 2 exercises × 3 sets
+        </div>
+      </div>
+
+
+      <div class="schedule-row" data-day="Thursday">
+        <div class="day">Thursday</div>
+
+        <div class="exercise">
+          Shoulders: 2 exercises × 3 sets
+          <br>
+          Biceps: 2 exercises × 3 sets
+          <br>
+          Triceps: 2 exercises × 3 sets
+          <br>
+          Abs
+        </div>
+      </div>
+
+
+      <div class="schedule-row" data-day="Friday">
+        <div class="day">Friday</div>
+
+        <div class="exercise">
+          Full Rest
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+<script>
+
+  // =========================
+  // WORKOUT SCHEDULE
+  // =========================
+
+  const workouts = {
+
+    Saturday: {
+      title: "Chest + Triceps",
+      details: `
+        Chest: 3 exercises × 3 sets<br>
+        Triceps: 2 exercises × 3 sets
+      `
+    },
+
+    Sunday: {
+      title: "Back + Biceps",
+      details: `
+        Back: 3 exercises × 3 sets<br>
+        Biceps: 2 exercises × 3 sets
+      `
+    },
+
+    Monday: {
+      title: "Legs + Calves + Abs",
+      details: `
+        Legs: 4 exercises × 3 sets<br>
+        Calves: 1 exercise × 3 sets<br>
+        Abs: 2 exercises
+      `
+    },
+
+    Tuesday: {
+      title: "Cardio / Recovery",
+      details: `
+        Walking: 30–45 minutes<br>
+        Light recovery day
+      `
+    },
+
+    Wednesday: {
+      title: "Chest + Back + Shoulders",
+      details: `
+        Chest: 2 exercises × 3 sets<br>
+        Back: 2 exercises × 3 sets<br>
+        Shoulders: 2 exercises × 3 sets
+      `
+    },
+
+    Thursday: {
+      title: "Shoulders + Arms + Abs",
+      details: `
+        Shoulders: 2 exercises × 3 sets<br>
+        Biceps: 2 exercises × 3 sets<br>
+        Triceps: 2 exercises × 3 sets<br>
+        Abs
+      `
+    },
+
+    Friday: {
+      title: "Rest Day 😴",
+      details: `
+        Full recovery<br>
+        Optional light walking
+      `
+    }
+
+  };
+
+
+
+  // =========================
+  // BAHRAIN CLOCK
+  // =========================
+
+  function updateTime() {
+
+    const now = new Date();
+
+
+    const time = new Intl.DateTimeFormat(
+      "en-US",
+      {
+        timeZone: "Asia/Bahrain",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true
+      }
+    ).format(now);
+
+
+    const date = new Intl.DateTimeFormat(
+      "en-US",
+      {
+        timeZone: "Asia/Bahrain",
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      }
+    ).format(now);
+
+
+    const day = new Intl.DateTimeFormat(
+      "en-US",
+      {
+        timeZone: "Asia/Bahrain",
+        weekday: "long"
+      }
+    ).format(now);
+
+
+    document.querySelector("#time").textContent = time;
+
+    document.querySelector("#date").textContent = date;
+
+
+    showTodayWorkout(day);
+
+  }
+
+
+
+  // =========================
+  // SHOW TODAY'S WORKOUT
+  // =========================
+
+  function showTodayWorkout(day) {
+
+    const workout = workouts[day];
+
+
+    document.querySelector("#todayWorkout").textContent =
+      workout.title;
+
+
+    document.querySelector("#workoutDetails").innerHTML =
+      workout.details;
+
+
+    const rows = document.querySelectorAll(".schedule-row");
+
+
+    rows.forEach(function(row) {
+
+      row.classList.remove("today");
+
+
+      const oldBadge = row.querySelector(".badge");
+
+      if (oldBadge) {
+        oldBadge.remove();
+      }
+
+
+      if (row.dataset.day === day) {
+
+        row.classList.add("today");
+
+
+        const badge = document.createElement("span");
+
+        badge.className = "badge";
+
+        badge.textContent = "TODAY";
+
+
+        row.querySelector(".day").appendChild(badge);
+
+      }
+
+    });
+
+  }
+
+
+
+  // =========================
+  // PRAYER TIMES
+  // =========================
+
+  async function getPrayerTimes() {
+
+    try {
+
+      /*
+        method = 0
+
+        Shia Ithna-Ashari
+        Leva Institute / Qum
+        Jafari calculation
+      */
+
+      const url =
+        "https://api.aladhan.com/v1/timingsByCity" +
+        "?city=Manama" +
+        "&country=Bahrain" +
+        "&method=0";
+
+
+      const response = await fetch(url);
+
+
+      const data = await response.json();
+
+
+      const timings = data.data.timings;
+
+
+      document.querySelector("#fajr").textContent =
+        formatPrayerTime(timings.Fajr);
+
+
+      document.querySelector("#sunrise").textContent =
+        formatPrayerTime(timings.Sunrise);
+
+
+      document.querySelector("#dhuhr").textContent =
+        formatPrayerTime(timings.Dhuhr);
+
+
+      document.querySelector("#maghrib").textContent =
+        formatPrayerTime(timings.Maghrib);
+
+
+      document.querySelector("#isha").textContent =
+        formatPrayerTime(timings.Isha);
+
+    }
+
+    catch (error) {
+
+      console.log("Prayer API Error:", error);
+
+      document.querySelector("#fajr").textContent = "Error";
+      document.querySelector("#sunrise").textContent = "Error";
+      document.querySelector("#dhuhr").textContent = "Error";
+      document.querySelector("#maghrib").textContent = "Error";
+      document.querySelector("#isha").textContent = "Error";
+
+    }
+
+  }
+
+
+
+  // =========================
+  // CONVERT 24H TO 12H
+  // =========================
+
+  function formatPrayerTime(time) {
+
+    const cleanTime = time.split(" ")[0];
+
+
+    const parts = cleanTime.split(":");
+
+
+    let hour = Number(parts[0]);
+
+    const minute = parts[1];
+
+
+    let period = "AM";
+
+
+    if (hour >= 12) {
+      period = "PM";
+    }
+
+
+    if (hour > 12) {
+      hour = hour - 12;
+    }
+
+
+    if (hour === 0) {
+      hour = 12;
+    }
+
+
+    return `${hour}:${minute} ${period}`;
+
+  }
+
+
+
+  // =========================
+  // START
+  // =========================
+
+  updateTime();
+
+  setInterval(updateTime, 1000);
+
+
+  getPrayerTimes();
+
+</script>
+
+
+</body>
+</html>
